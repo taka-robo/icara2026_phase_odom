@@ -1,6 +1,0 @@
-\section{関連研究}\label{sec:related}
-CNN 系モデルは，AlexNet による深層畳み込みの導入以降，VGG による深層化，ResNet による残差接続の導入などを通じて性能と学習安定性を向上させてきた。\cite{krizhevsky2012imagenet,simonyan2014very,he2016deep} ResNet-18 はモバイル環境でも利用可能な軽量モデルとして広く採用されており，本研究でも比較対象として採用する。
-
-一方，自己注意に基づく Vision Transformer (ViT) は，画像をパッチに分割して系列として処理するアプローチであり，大規模事前学習を前提として高い性能を達成している。\cite{dosovitskiy2021an} ViT の軽量化を目的とした DeiT は，データ効率の良い学習戦略と蒸留手法を導入することで，小規模データセットでも競争力を示す。\cite{touvron2021training}
-
-学習率スケジューリングや正則化の工夫は，モデルの汎化性能を支える重要な要素である。Cosine Annealing による学習率減衰は CNN で効率的な訓練を可能にし，\cite{loshchilov2017sgdr} Label Smoothing や RandAugment は Transformer 系モデルでも精度向上に寄与する。\cite{muller2019does,cubuk2020randaugment} しかし，これらのテクニックを一貫した条件で比較する研究は限られており，複数のモデルを同一基盤で評価するベースラインの整備が求められている。
