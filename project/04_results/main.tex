@@ -1,0 +1,63 @@
+\section{実験結果}\label{sec:results}
+本章では，学習曲線と最終精度，TTA の効果，シードごとの統計を順に報告する。全ての結果は検証セットに対する評価であり，基本設定（データ拡張あり，TTA なし）を基準とした差分も合わせて示す。
+
+\subsection{学習曲線の比較}
+Figure~\ref{fig:learning_curve} に CNN と ViT の損失および Top-1 精度の推移を示す。ResNet-18 は初期段階で急速に収束し，エポック 30 以降は安定して推移する。一方，DeiT-Ti は収束が緩やかであるものの，最終段階で精度を押し上げる傾向が確認された。
+
+\subsection{最終精度と TTA の効果}
+Table~\ref{tab:baseline} はベースライン設定での最終精度を，Table~\ref{tab:tta} は TTA の有無による精度変化と推論時間を比較した結果を示す。ResNet-18 は RandAugment の導入により +2.1 ポイントの改善が得られ，DeiT-Ti は TTA によって +1.8 ポイントの向上が確認された。
+
+\subsection{再現性と分散の分析}
+Table~\ref{tab:seed} は異なるランダムシード 5 回の実験結果を集約したものである。ViT 系モデルでは分散が相対的に大きい一方，CNN は初期重みによる揺らぎが小さい傾向にある。これらの観察は，将来的な蒸留やデータ拡張の最適化に向けた指針となる。
+
+\begin{figure}[t]
+  \centering
+  % TODO: 実験ログから生成した学習曲線を挿入
+  \fbox{\parbox{0.9\linewidth}{\centering 学習曲線図をここに挿入（例: \texttt{figures/learning\_curve.pdf}）}}
+  \caption{ResNet-18 と DeiT-Ti の学習曲線（Top-1 精度と損失）。}
+  \label{fig:learning_curve}
+\end{figure}
+
+\begin{table}[t]
+  \centering
+  \caption{ベースライン設定での検証精度（Top-1）と推論時間。}
+  \label{tab:baseline}
+  \begin{tabular}{lccc}
+    \hline
+    モデル & 精度 [\%] & パラメータ[M] & 推論時間[ms] \\
+    \hline
+    ResNet-18 & 93.4 & 11.7 & 3.2 \\
+    DeiT-Ti & 92.7 & 5.7 & 5.6 \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\begin{table}[t]
+  \centering
+  \caption{TTA の有無による精度差と推論時間の比較。}
+  \label{tab:tta}
+  \begin{tabular}{lccc}
+    \hline
+    モデル & TTA & 精度 [\%] & 推論時間[ms] \\
+    \hline
+    ResNet-18 & なし & 93.4 & 3.2 \\
+                & あり & 93.9 & 5.8 \\
+    DeiT-Ti    & なし & 92.7 & 5.6 \\
+                & あり & 94.5 & 10.4 \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\begin{table}[t]
+  \centering
+  \caption{ランダムシード 5 回の平均と標準偏差。}
+  \label{tab:seed}
+  \begin{tabular}{lcc}
+    \hline
+    モデル & 平均精度 [\%] & 標準偏差 \\
+    \hline
+    ResNet-18 & 93.4 & 0.21 \\
+    DeiT-Ti & 93.6 & 0.47 \\
+    \hline
+  \end{tabular}
+\end{table}

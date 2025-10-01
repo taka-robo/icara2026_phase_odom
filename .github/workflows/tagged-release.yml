@@ -1,0 +1,47 @@
+name: Build and Release PDF
+
+on:
+  push:
+    tags:
+      - '*'
+
+permissions:
+  contents: write
+
+env:
+  ROOT_TEX: project/main.tex
+  OUTPUT_PDF: out/main.pdf
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Prepare output directory
+        run: mkdir -p out
+
+      - name: Compile LaTeX project
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: .
+          root_file: ${{ env.ROOT_TEX }}
+          latexmk_use_xelatex: true
+
+      - name: Upload PDF as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: paper-pdf
+          path: ${{ env.OUTPUT_PDF }}
+
+      - name: Create GitHub release and attach PDF
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ env.OUTPUT_PDF }}
+          name: Release ${{ github.ref_name }}
+          tag_name: ${{ github.ref_name }}
+          fail_on_unmatched_files: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

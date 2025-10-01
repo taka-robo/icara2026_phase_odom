@@ -1,0 +1,50 @@
+% !TEX program = xelatex
+\documentclass[conference]{IEEEtran}
+
+% 日本語出力と XeLaTeX 対応設定
+\usepackage{xeCJK}
+\usepackage{fontspec}
+\setCJKmainfont{HaranoAjiMincho}
+
+% 数式・図表・参考文献などの標準パッケージ
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{hyperref}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  citecolor=blue,
+  urlcolor=blue
+}
+
+\begin{document}
+
+\title{軽量 CNN と Vision Transformer の公平比較に向けた実験的評価}
+
+\author{\IEEEauthorblockN{著者 太郎\\ }
+\IEEEauthorblockA{所属機関\\ 連絡先: author@example.com}}
+
+\maketitle
+
+\begin{abstract}
+本稿では，軽量な畳み込みニューラルネットワーク（CNN）と Vision Transformer（ViT）の画像分類性能を，CIFAR-10 を対象に公平に比較する実験プロトコルを提示する。学習率スケジューリング，データ拡張，Test-Time Augmentation (TTA) を統一的に適用し，再現性を重視した評価を実施した。実験の結果，ViT-Ti は TTA により最大で +1.8pt の精度向上を得た一方，ResNet-18 では RandAugment を中心としたデータ拡張で +2.1pt の改善が確認された。これらの知見を通じて，限られた計算資源でも堅牢なベースラインを構築するための指針を示す。
+\end{abstract}
+
+\begin{IEEEkeywords}
+画像分類, 深層学習, Vision Transformer, Test-Time Augmentation, CIFAR-10
+\end{IEEEkeywords}
+
+\input{01_introduction/main}
+\input{02_related_work/main}
+\input{03_method/main}
+\input{04_results/main}
+\input{05_discussion/main}
+\input{06_conclusion/main}
+\input{appendix/main}
+
+\bibliographystyle{ieeetr}
+\bibliography{references}
+
+\end{document}

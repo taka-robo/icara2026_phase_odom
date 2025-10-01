@@ -1,0 +1,30 @@
+{
+  "name": "Latex-ja-full",
+  "image": "mcr.microsoft.com/devcontainers/python:3",
+  "features": {
+    "ghcr.io/devcontainers-extra/features/apt-get-packages:1": {
+      "packages": "plantuml,graphviz,fonts-ipaexfont,cpanminus,librsvg2-bin"
+    },
+    "ghcr.io/prulloac/devcontainer-features/latex:1": {
+      "scheme": "basic",
+      "packages": "latexindent,latexdiff,chktex,uplatex,pbibtex-base,biber,upmendex,texliveonfly,latexmk,tex-gyre,underscore,collection-langjapanese"
+    },
+    "ghcr.io/devcontainers/features/node:1": {},
+    "ghcr.io/devcontainers-extra/features/zsh-plugins:0": {
+      "plugins": "vscode git colorize docker docker-compose node npm python zsh-autosuggestions zsh-syntax-highlighting fast-syntax-highlighting zsh-autocomplete"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "eamodio.gitlens",
+        "shardulm94.trailing-spaces",
+        "stkb.rewrap",
+        "hediet.vscode-drawio",
+        "jebbs.plantuml",
+        "taichi.vscode-textlint",
+        "ms-python.autopep8"
+      ]
+    }
+  }
+}
