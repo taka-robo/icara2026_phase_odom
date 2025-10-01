@@ -1,294 +1,351 @@
 \documentclass[conference]{IEEEtran}
 \IEEEoverridecommandlockouts
-% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
 \usepackage{cite}
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{algorithmic}
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{xcolor}
+\usepackage{bm}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
 
-\title{Conference Paper Title*\\
-{\footnotesize \textsuperscript{*}Note: Sub-titles are not captured in Xplore and
-should not be used}
-\thanks{Identify applicable funding agency here. If none, delete this.}
-}
+\title{Phase Odometry: Trajectory Estimation for Mobile Robots via Graph Optimization to Mitigate Error Accumulation by Complementing Wi-Wi Carrier Wave Phases and Odometry}
 
-\author{\IEEEauthorblockN{1\textsuperscript{st} Given Name Surname}
-\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
-\textit{name of organization (of Aff.)}\\
-City, Country \\
-email address or ORCID}
-~\\
-\and
-\IEEEauthorblockN{2\textsuperscript{nd} Given Name Surname*}
-\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
-\textit{name of organization (of Aff.)}\\
-City, Country \\
-email address or ORCID}
-*Corresponding author
-~\\
-\and
-\IEEEauthorblockN{3\textsuperscript{rd} Given Name Surname}
-\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
-\textit{name of organization (of Aff.)}\\
-City, Country \\
-email address or ORCID}
-~\\
-\and
-\IEEEauthorblockN{4\textsuperscript{th} Given Name Surname}
-\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
-\textit{name of organization (of Aff.)}\\
-City, Country \\
-email address or ORCID}
-
-\and
-\IEEEauthorblockN{5\textsuperscript{th} Given Name Surname}
-\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
-\textit{name of organization (of Aff.)}\\
-City, Country \\
-email address or ORCID}
-
-\and
-\IEEEauthorblockN{6\textsuperscript{th} Given Name Surname}
-\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
-\textit{name of organization (of Aff.)}\\
-City, Country \\
-email address or ORCID}
-}
+\author{\IEEEauthorblockN{Takaaki Nara\IEEEauthorrefmark{1}, Yoshito Okada\IEEEauthorrefmark{1}, Shotaro Kojima\IEEEauthorrefmark{1}, Yoshiki Yokota\IEEEauthorrefmark{1},\ Ranulfo Bezerra\IEEEauthorrefmark{1}, Kazunori Ohno\IEEEauthorrefmark{1}, Nobuyasu Shiga\IEEEauthorrefmark{2}, Satoshi Yasuda\IEEEauthorrefmark{2},\ Kenichi Takizawa\IEEEauthorrefmark{2}, and Satoshi Tadokoro\IEEEauthorrefmark{1}}
+\IEEEauthorblockA{\IEEEauthorrefmark{1}Graduate School of Information Sciences, Tohoku University, Sendai, Miyagi 980-8579, Japan\
+Email: nara.takaaki@rm.is.tohoku.ac.jp}
+\IEEEauthorblockA{\IEEEauthorrefmark{2}National Institute of Information and Communications Technology, Koganei, Tokyo 184-8795, Japan}}
 
 \maketitle
 
 \begin{abstract}
-This document is a model and instructions for \LaTeX.
-This and the IEEEtran.cls file define the components of your paper [title, text, heads, etc.]. *CRITICAL: Do Not Use Symbols, Special Characters, Footnotes, 
-or Math in Paper Title or Abstract.
+We propose a localization method for mobile robots based on the radio wave phase measurements from multiple wireless fixed bases.
+In the proposed method, we define a graph where the fixed bases and the robot positions at each time step are represented as nodes, and the measured movements between these nodes as edges.
+Since phase measurements have high accuracy but contain a $2\pi$ ambiguity, we introduce edges based on the phase differences between measurements and edges based on the robot's wheel odometry, which are less accurate but free from ambiguity.
+We estimate the positions of both the robot and the fixed bases by solving an unconstrained nonlinear least-squares problem, which minimizes the error between the predicted and measured edge values.
+In this presentation, we report the results of simulation and real-world experiments on the estimation accuracy of the proposed method.
 \end{abstract}
 
 \begin{IEEEkeywords}
-component, formatting, style, styling, insert
+Localization, mobile robot, wireless two-way interferometry (Wi-Wi)
 \end{IEEEkeywords}
 
 \section{Introduction}
-This document is a model and instructions for \LaTeX.
-Please observe the conference page limits. 
+Localization techniques that leverage radio carrier-phase measurements have attracted attention in domains such as autonomous driving because they provide higher measurement accuracy than approaches based on received signal strength or code-based pseudoranges~\cite{gnss_autonomou_vehicles}.
+Real-Time Kinematic Global Navigation Satellite System (RTK-GNSS)~\cite{RTK-GNSS} is a representative carrier-phase-based positioning method.
+RTK-GNSS can estimate the position of a receiving antenna with an accuracy of several centimeters and has been applied in drones~\cite{RTK-M300}, agriculture~\cite{RTK-Agriculture}, construction~\cite{six-dump}, and many other fields.
+However, GNSS requires line of sight to satellites and suffers from accuracy degradation caused by natural phenomena such as ionospheric conditions and geomagnetic disturbances~\cite{gnss_error,STANKOV2007485}.
 
-\section{Ease of Use}
-
-\subsection{Maintaining the Integrity of the Specifications}
-
-The IEEEtran class file is used to format your paper and style the text. All margins, 
-column widths, line spaces, and text fonts are prescribed; please do not 
-alter them. You may note peculiarities. For example, the head margin
-measures proportionately more than is customary. This measurement 
-and others are deliberate, using specifications that anticipate your paper 
-as one part of the entire proceedings, and not as an independent document. 
-Please do not revise any of the current designations.
-
-\section{Prepare Your Paper Before Styling}
-Before you begin to format your paper, first write and save the content as a 
-separate text file. Complete all content and organizational editing before 
-formatting. Please note sections \ref{AA}--\ref{SCM} below for more information on 
-proofreading, spelling and grammar.
-
-Keep your text and graphic files separate until after the text has been 
-formatted and styled. Do not number text heads---{\LaTeX} will do that 
-for you.
-
-\subsection{Abbreviations and Acronyms}\label{AA}
-Define abbreviations and acronyms the first time they are used in the text, 
-even after they have been defined in the abstract. Abbreviations such as 
-IEEE, SI, MKS, CGS, ac, dc, and rms do not have to be defined. Do not use 
-abbreviations in the title or heads unless they are unavoidable.
-
-\subsection{Units}
-\begin{itemize}
-\item Use either SI (MKS) or CGS as primary units. (SI units are encouraged.) English units may be used as secondary units (in parentheses). An exception would be the use of English units as identifiers in trade, such as ``3.5-inch disk drive''.
-\item Avoid combining SI and CGS units, such as current in amperes and magnetic field in oersteds. This often leads to confusion because equations do not balance dimensionally. If you must use mixed units, clearly state the units for each quantity that you use in an equation.
-\item Do not mix complete spellings and abbreviations of units: ``Wb/m\textsuperscript{2}'' or ``webers per square meter'', not ``webers/m\textsuperscript{2}''. Spell out units when they appear in text: ``. . . a few henries'', not ``. . . a few H''.
-\item Use a zero before decimal points: ``0.25'', not ``.25''. Use ``cm\textsuperscript{3}'', not ``cc''.)
-\end{itemize}
-
-\subsection{Equations}
-Number equations consecutively. To make your 
-equations more compact, you may use the solidus (~/~), the exp function, or 
-appropriate exponents. Italicize Roman symbols for quantities and variables, 
-but not Greek symbols. Use a long dash rather than a hyphen for a minus 
-sign. Punctuate equations with commas or periods when they are part of a 
-sentence, as in:
-\begin{equation}
-a+b=\gamma\label{eq}
-\end{equation}
-
-Be sure that the 
-symbols in your equation have been defined before or immediately following 
-the equation. Use ``\eqref{eq}'', not ``Eq.~\eqref{eq}'' or ``equation \eqref{eq}'', except at 
-the beginning of a sentence: ``Equation \eqref{eq} is . . .''
-
-\subsection{\LaTeX-Specific Advice}
-
-Please use ``soft'' (e.g., \verb|\eqref{Eq}|) cross references instead
-of ``hard'' references (e.g., \verb|(1)|). That will make it possible
-to combine sections, add equations, or change the order of figures or
-citations without having to go through the file line by line.
-
-Please don't use the \verb|{eqnarray}| equation environment. Use
-\verb|{align}| or \verb|{IEEEeqnarray}| instead. The \verb|{eqnarray}|
-environment leaves unsightly spaces around relation symbols.
-
-Please note that the \verb|{subequations}| environment in {\LaTeX}
-will increment the main equation counter even when there are no
-equation numbers displayed. If you forget that, you might write an
-article in which the equation numbers skip from (17) to (20), causing
-the copy editors to wonder if you've discovered a new method of
-counting.
-
-{\BibTeX} does not work by magic. It doesn't get the bibliographic
-data from thin air but from .bib files. If you use {\BibTeX} to produce a
-bibliography you must send the .bib files. 
-
-{\LaTeX} can't read your mind. If you assign the same label to a
-subsubsection and a table, you might find that Table I has been cross
-referenced as Table IV-B3. 
-
-{\LaTeX} does not have precognitive abilities. If you put a
-\verb|\label| command before the command that updates the counter it's
-supposed to be using, the label will pick up the last counter to be
-cross referenced instead. In particular, a \verb|\label| command
-should not go before the caption of a figure or a table.
-
-Do not use \verb|\nonumber| inside the \verb|{array}| environment. It
-will not stop equation numbers inside \verb|{array}| (there won't be
-any anyway) and it might stop a wanted equation number in the
-surrounding equation.
-
-\subsection{Some Common Mistakes}\label{SCM}
-\begin{itemize}
-\item The word ``data'' is plural, not singular.
-\item The subscript for the permeability of vacuum $\mu_{0}$, and other common scientific constants, is zero with subscript formatting, not a lowercase letter ``o''.
-\item In American English, commas, semicolons, periods, question and exclamation marks are located within quotation marks only when a complete thought or name is cited, such as a title or full quotation. When quotation marks are used, instead of a bold or italic typeface, to highlight a word or phrase, punctuation should appear outside of the quotation marks. A parenthetical phrase or statement at the end of a sentence is punctuated outside of the closing parenthesis (like this). (A parenthetical sentence is punctuated within the parentheses.)
-\item A graph within a graph is an ``inset'', not an ``insert''. The word alternatively is preferred to the word ``alternately'' (unless you really mean something that alternates).
-\item Do not use the word ``essentially'' to mean ``approximately'' or ``effectively''.
-\item In your paper title, if the words ``that uses'' can accurately replace the word ``using'', capitalize the ``u''; if not, keep using lower-cased.
-\item Be aware of the different meanings of the homophones ``affect'' and ``effect'', ``complement'' and ``compliment'', ``discreet'' and ``discrete'', ``principal'' and ``principle''.
-\item Do not confuse ``imply'' and ``infer''.
-\item The prefix ``non'' is not a word; it should be joined to the word it modifies, usually without a hyphen.
-\item There is no period after the ``et'' in the Latin abbreviation ``et al.''.
-\item The abbreviation ``i.e.'' means ``that is'', and the abbreviation ``e.g.'' means ``for example''.
-\end{itemize}
-An excellent style manual for science writers is \cite{b7}.
-
-\subsection{Authors and Affiliations}
-\textbf{The class file is designed for, but not limited to, six authors.} A 
-minimum of one author is required for all conference articles. Author names 
-should be listed starting from left to right and then moving down to the 
-next line. This is the author sequence that will be used in future citations 
-and by indexing services. Names should not be listed in columns nor group by 
-affiliation. Please keep your affiliations as succinct as possible (for 
-example, do not differentiate among departments of the same organization).
-
-\subsection{Identify the Headings}
-Headings, or heads, are organizational devices that guide the reader through 
-your paper. There are two types: component heads and text heads.
-
-Component heads identify the different components of your paper and are not 
-topically subordinate to each other. Examples include Acknowledgments and 
-References and, for these, the correct style to use is ``Heading 5''. Use 
-``figure caption'' for your Figure captions, and ``table head'' for your 
-table title. Run-in heads, such as ``Abstract'', will require you to apply a 
-style (in this case, italic) in addition to the style provided by the drop 
-down menu to differentiate the head from the text.
-
-Text heads organize the topics on a relational, hierarchical basis. For 
-example, the paper title is the primary text head because all subsequent 
-material relates and elaborates on this one topic. If there are two or more 
-sub-topics, the next level head (uppercase Roman numerals) should be used 
-and, conversely, if there are not at least two sub-topics, then no subheads 
-should be introduced.
-
-\subsection{Figures and Tables}
-\paragraph{Positioning Figures and Tables} Place figures and tables at the top and 
-bottom of columns. Avoid placing them in the middle of columns. Large 
-figures and tables may span across both columns. Figure captions should be 
-below the figures; table heads should appear above the tables. Insert 
-figures and tables after they are cited in the text. Use the abbreviation 
-``Fig.~\ref{fig}'', even at the beginning of a sentence.
-
-\begin{table}[htbp]
-\caption{Table Type Styles}
-\begin{center}
-\begin{tabular}{|c|c|c|c|}
-\hline
-\textbf{Table}&\multicolumn{3}{|c|}{\textbf{Table Column Head}} \\
-\cline{2-4} 
-\textbf{Head} & \textbf{\textit{Table column subhead}}& \textbf{\textit{Subhead}}& \textbf{\textit{Subhead}} \\
-\hline
-copy& More table copy$^{\mathrm{a}}$& &  \\
-\hline
-\multicolumn{4}{l}{$^{\mathrm{a}}$Sample of a Table footnote.}
-\end{tabular}
-\label{tab1}
-\end{center}
-\end{table}
-
-\begin{figure}[htbp]
-\centerline{\includegraphics{fig1.png}}
-\caption{Example of a figure caption.}
-\label{fig}
+\begin{figure}[tb]
+    \centering
+    \includegraphics[width=0.99\linewidth]{figures/Fig1.pdf}
+    \caption{The simultaneous estimation of the robot's position and the fixed bases' position is based on graph optimization using carrier phase and odometry measurements.}
+    \label{fig:fig1}
 \end{figure}
 
-Figure Labels: Use 8 point Times New Roman for Figure labels. Use words 
-rather than symbols or abbreviations when writing Figure axis labels to 
-avoid confusing the reader. As an example, write the quantity 
-``Magnetization'', or ``Magnetization, M'', not just ``M''. If including 
-units in the label, present them within parentheses. Do not label axes only 
-with units. In the example, write ``Magnetization (A/m)'' or ``Magnetization 
-\{A[m(1)]\}'', not just ``A/m''. Do not label axes with a ratio of 
-quantities and units. For example, write ``Temperature (K)'', not 
-``Temperature/K''.
+As an alternative to RTK-GNSS, we study a localization method based on carrier-phase measurements supported by wireless two-way interferometry (Wi-Wi)~\cite{Shiga2017,Yasuda2019}, a precise wireless time-synchronization technology.
+In carrier-phase measurements, the drift of internal clocks among radio terminals directly affects ranging.
+Conventional solutions either rely on highly accurate but expensive atomic clocks, as with GNSS, or on wired connections with limited deployment flexibility, making it difficult to adopt carrier-phase measurements on mobile robots.
+Wi-Wi synchronizes the clocks of communication devices at the sub-nanosecond level through a bidirectional wireless protocol implemented with commercial-off-the-shelf radios.
+As illustrated in Fig.~\ref{fig:fig1}, we place Wi-Wi terminals both on the robot and in the environment and exploit the precise phase information measured using Wi-Wi's accurate time synchronization to achieve higher localization accuracy than existing approaches.
+
+Nevertheless, two challenges must be addressed to realize localization with Wi-Wi.
+First, carrier-phase measurements exhibit a $2\pi$ ambiguity: the phase value repeats with a period of $2\pi$, meaning the absolute distance between antennas cannot be directly retrieved from a single measurement.
+Therefore, using the raw phase measurements alone does not yield an accurate position estimate, and additional processing is required.
+Second, we assume that users can freely place the fixed bases.
+The relative arrangement of the bases is initially unknown, yet we must estimate both the base configuration and the robot trajectory solely from ambiguous phase measurements.
+
+To overcome these challenges, we propose a graph-optimization-based localization method that fuses differences of carrier-phase measurements taken at different time steps with wheel odometry derived from the rotation of the robot's tires.
+The key idea is to build a graph whose edges incorporate both the highly accurate but ambiguous carrier-phase differences and the less accurate but ambiguity-free motion increments obtained from odometry.
+By complementing each modality, the method suppresses the accumulation of errors.
+Treating the fixed bases as unknown parameters within the graph further enables simultaneous estimation of the base positions and the robot trajectory even when prior knowledge about the deployment is limited.
+
+This paper analyzes the characteristics of the proposed method through simulation and evaluates its accuracy in real-world indoor experiments.
+The results show that the proposed method estimates the robot's position with sub-meter accuracy in indoor environments where radio-based localization is challenging, while the fixed-base positions are recovered with errors as small as 0.11~m.
+
+\section{Related Work}
+Wireless two-way interferometry (Wi-Wi) synchronizes clocks between radio terminals by bidirectionally measuring carrier phases and compensating for clock offsets.
+The Wi-Wi terminals used in this study employ the 920~MHz band, achieving 30~ns timing synchronization accuracy and 20~ps phase (jitter) synchronization accuracy~\cite{ouchi2024evaluation}.
+Existing Wi-Wi research includes delay-constrained wireless networking enabled by precise synchronization~\cite{Yamasaki2021} and estimation of atmospheric water vapor based on propagation characteristics~\cite{Yasuda2019}.
+To our knowledge, our prior work~\cite{rsj2021_nara,rsj2022_nara,ziku2023_nara} represents the only studies that apply Wi-Wi to localization of mobile platforms.
+Building on this line of research, we propose a graph-optimization-based localization method that places Wi-Wi terminals on both the mobile robot and the environment and utilizes carrier-phase measurements between the robot and fixed bases.
+
+Graph-based optimization is a powerful approach to minimizing motion and pose errors in robot trajectory estimation, and extensive research has explored simultaneous localization and mapping (SLAM) using cameras, LiDAR, and odometry~\cite{grisetti2010tutorial,graph_slam_urban_mapping,graph_slam_2012}.
+
+Carrier-phase-based localization methods that exploit time-differenced carrier phase (TDCP) measurements, which subtract GNSS carrier phases across time, have also been investigated~\cite{TDCP2008,TDCP2022}.
+TDCP eliminates the ambiguity inherent in carrier phases and delivers high accuracy even in multipath environments.
+GNSS odometry, which combines TDCP with graph-based optimization to estimate trajectories using a single GNSS receiver, has been proposed~\cite{suzuki2022gnss}.
+These GNSS-based approaches provide excellent accuracy when satellite signals are available, but they are difficult to deploy indoors, where signals are blocked.
+In contrast, our goal is to localize by deploying wireless fixed bases even in environments where GNSS cannot be used, enabling the simultaneous estimation of both base locations and the robot trajectory.
+
+\section{Trajectory Estimation via Graph Optimization Combining Odometry and Carrier Phase Differences}
+\subsection{Overview}
+In the proposed system, multiple Wi-Wi terminals installed in the environment act as fixed bases, and the mobile robot is equipped with a Wi-Wi terminal capable of communicating with the bases as well as an odometry sensor that measures its motion.
+The bases are assumed to be multiple, and their relative positions are unknown.
+Phase measurements can be obtained from all bases within communication range, and each measurement can be associated with the corresponding base.
+The robot records odometry and carrier-phase measurements while moving.
+Because odometry typically updates faster, we treat the robot pose at the instant of each carrier-phase measurement as the odometry pose, effectively assuming synchronized measurement timings.
+
+\subsection{Graph Structure and Notation}
+The graph to be optimized is illustrated in Fig.~\ref{fig:graph_structure}.
+The graph contains $J$ fixed-base nodes ($\mathbf{B}_j$) and $I$ robot nodes ($\mathbf{x}_i$), where $i$ indexes the robot poses at which carrier-phase measurements are obtained.
+Edges between robot nodes encode odometry measurements $\mathbf{z}$, while edges between robot nodes and fixed-base nodes encode carrier-phase measurements $\phi$.
+
+\begin{figure}[tb]
+    \centering
+    \includegraphics[width=0.95\linewidth]{figures/graph.pdf}
+    \caption{Graph structure to be optimized in the proposed method.}
+    \label{fig:graph_structure}
+\end{figure}
+
+The set of state variables in the proposed method is defined as
+\begin{equation}
+    \mathbf{X} = \left[\mathbf{\hat{x}}_0\, \mathbf{\hat{x}}_1\, \mathbf{\hat{x}}_2\, \cdots \mathbf{\hat{x}}_{I-1}\, \mathbf{\hat{B}}_0\, \mathbf{\hat{B}}_1\, \cdots \mathbf{\hat{B}}_{J-1}\, \mathbf{\hat{H}}\right].
+\end{equation}
+Here $\mathbf{\hat{H}}$ is the transformation matrix from the robot's odometry frame to the estimation frame.
+The state variables of each node are given by
+\begin{equation}
+   \mathbf{\hat{x}}_i = \left[\mathbf{p}_i\, \theta_{i}\right], \quad
+   \mathbf{\hat{B}}_j = \left[\mathbf{p}'_j\right],
+\end{equation}
+where $\mathbf{p}$ denotes the position $(x,y)$ of each node in the 2-D estimation frame and $\theta_i$ is the yaw angle in the $xy$-plane.
+The bases are assumed to have isotropic antennas, so orientation information is not included.
+
+Graph-based pose estimation suffers from a gauge freedom: applying a common translation and rotation to all nodes leaves the cost unchanged, preventing a unique solution.
+We remove this degree of freedom by fixing $\mathbf{B}_0$ at the origin and aligning the $x$-axis with the direction from $\mathbf{B}_0$ to $\mathbf{B}_1$.
+Accordingly, $\mathbf{B}_0$ is set to $(0,0)$ and $\mathbf{B}_1$ lies on the $x$-axis as $(p'_{x,1}, 0)$ during optimization.
+
+\subsection{Objective Function}
+The objective function minimized by the optimization is composed of error terms derived from odometry measurements, $\mathbf{e}_{\mathrm{OD}}$, and carrier-phase measurements, $e_{\mathrm{PH}}$, weighted by information matrices $\Omega$ that encode the confidence of each measurement:
+\begin{align}
+    \hat{\mathbf{X}} = \arg\min_{\mathbf{X}} &\sum_{i}\|\mathbf{e}_{\mathrm{OD},i+n,i}\|_{\Omega_{\mathrm{OD},i+n,i}} \
+    &+ \sum_{i}\sum_{j}\|e_{\mathrm{PH},i+n,i,j}\|_{\Omega_{\mathrm{PH},i+n,i,j}}.
+\end{align}
+
+\subsection{Odometry Error Term}
+We adopt the odometry error formulation used in conventional graph SLAM~\cite{graph_slam}.
+The robot state in the odometry frame is defined as
+\begin{equation}
+    \mathbf{x}_i = [\mathbf{p}_i\, \theta_i].
+\end{equation}
+The odometry measurement $\mathbf{z}_{i+n,i}$ relating states $\mathbf{x}_i$ and $\mathbf{x}_{i+n}$ is given by
+\begin{equation}
+    \mathbf{z}_{i+n,i} = \mathbf{h}(\mathbf{x}_{i+n}, \mathbf{x}_{i}) + \mathbf{w}_{i+n,i},
+\end{equation}
+where $\mathbf{h}(\cdot)$ is the sensor model and $\mathbf{w}_{i+n,i}$ denotes measurement noise.
+The corresponding error function between the estimates $\mathbf{\hat{x}}_i$ and $\mathbf{\hat{x}}_{i+n}$ is
+\begin{equation}
+    \mathbf{e}_{\mathrm{OD},i+n,i} = \left(\mathbf{\hat{x}}_{i+n} - \mathbf{\hat{x}}_{i}\right) - \mathbf{\hat{H}}\mathbf{z}_{i+n,i},
+\end{equation}
+with the weighted squared error
+\begin{equation}
+    \|\mathbf{e}_{\mathrm{OD},i+n,i}\|_{\Omega_{\mathrm{OD},i+n,i}} = \mathbf{e}_{\mathrm{OD},i+n,i}\, \Omega_{\mathrm{OD},i+n,i}\, \mathbf{e}_{\mathrm{OD},i+n,i}.
+\end{equation}
+
+\subsection{Carrier Phase Error Term}
+The carrier-phase measurement obtained from Wi-Wi is modeled as~\cite{Peng2017}
+\begin{equation}
+     \phi_{i,j} = \phi_{D,i,j} + \frac{1}{2}\pi K_i + w^{\phi}_{i,j},
+\end{equation}
+where $\phi_{D,i,j}$ represents the phase change accumulated during propagation between antennas, $K_i$ is the integer bias used to unwrap the phase every half wavelength from the start of measurement, and $w^{\phi}_{i,j}$ denotes measurement noise.
+Although Wi-Wi resolves the ambiguity by continuously unwrapping the phase from the beginning of the experiment, reflected multipath signals can cause incorrect integer-bias updates, leading to accumulated errors.
+Therefore, instead of linking a robot node to a base node using a single phase observation, we define error functions using the difference between phase measurements at poses $i$ and $i+n$.
+If the phase measurements are error free, the difference corresponds to the difference in distances between the robot poses and the base.
+Letting $\lambda$ denote the wavelength, the error term is defined as
+\begin{equation}
+    e_{\mathrm{PH},i+n,i,j} = \left(\|\mathbf{\hat{p}}_{i+n} - \mathbf{\hat{B}}_j\| - \|\mathbf{\hat{p}}_{i} - \mathbf{\hat{B}}_j\|\right) - \lambda (\phi_{i+n,j} - \phi_{i,j}),
+\end{equation}
+with the weighted squared error
+\begin{equation}
+    \|e_{\mathrm{PH},i+n,i,j}\|_{\Omega_{\mathrm{PH},i+n,i,j}} = e_{\mathrm{PH},i+n,i,j} \, \Omega_{\mathrm{PH},i+n,i,j} \, e_{\mathrm{PH},i+n,i,j}.
+\end{equation}
+
+\section{Simulation Experiments}
+We evaluated the effectiveness of combining the odometry and carrier-phase error terms in a simulation environment.
+Three conditions were compared: using odometry only, using phase information only, and the proposed fusion of phase and odometry.
+The simulation was implemented on ROS~1 (Noetic), and the proposed method was realized as a ROS node using the Ceres Solver~\cite{ceres-solver} for nonlinear optimization.
+The specifications of the PC and solver parameters are summarized in Table~\ref{tab:simpc}.
+
+\input{tables/simpc}
+
+\subsection{Experimental Setup}
+The simulation models a 10~m\,$\times$\,10~m indoor area where both the robot and four fixed bases lie on a two-dimensional plane.
+We assume that the Wi-Wi terminals on the bases and the robot share the same height, so altitude is not estimated.
+The bases are placed at the four corners of the area.
+The robot starts at $(x,y)=(1,1)$~m, moves around the perimeter, and then heads toward the center at $(5,5)$~m.
+Carrier-phase and odometry measurements are obtained at 20~Hz.
+Gaussian noise with zero mean and 0.01~m standard deviation is added to the phase measurements.
+For the odometry, translational noise follows a zero-mean Gaussian distribution with 0.1~m standard deviation per meter of travel, and rotational noise has zero mean and 0.1~rad standard deviation.
+Optimization is executed online every time a new measurement arrives.
+
+We compare three conditions: odometry only, phase only, and the proposed fusion.
+The base positions are estimated in the phase-only and proposed conditions.
+The initial values used for the bases are listed in Table~\ref{tab:initial}, offset by approximately one meter from the ground truth.
+The odometry-only condition does not perform optimization; it directly integrates the odometry measurements.
+The phase-only condition initializes the robot nodes with the previous optimization result, whereas the proposed method initializes them with the current odometry measurements.
+
+\begin{table}
+    \centering
+    \caption{Initial values used for the estimation of fixed bases.}
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+        & $\mathbf{B}_1$ & $\mathbf{B}_2$ & $\mathbf{B}_3$ \ \hline
+       True value [m] &(10,0)  &(10,10) &(0,10) \ \hline
+       Initial value [m] &(9,0)  &(11,11) &(0,11) \ \hline
+    \end{tabular}
+    \label{tab:initial}
+\end{table}
+
+\subsection{Results}
+Figures~\ref{fig:trajectory_sim}(a)--(c) show the estimated robot trajectory and base positions under each condition, and Fig.~\ref{fig:trajectory_sim}(d) plots the Euclidean trajectory error against the travel distance.
+With odometry alone, the estimation error accumulates over time.
+Phase-only estimation largely follows the path but occasionally deviates significantly.
+In the proposed method, the trajectory converges to the true path near the corner at $(9,9)$~m and subsequently maintains approximately 0.1~m error.
+
+Figure~\ref{fig:trajectory_sim}(e) reports the estimation error for base $\mathbf{B}_2$, representative of the largest error among the bases.
+Table~\ref{tab:base_error} summarizes the final estimation errors for all bases using the measurements up to the end of the trajectory.
+\begin{table}
+    \centering
+    \caption{Position estimation accuracy for each fixed base in the simulation.}
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+    & $\mathbf{B}_1$ & $\mathbf{B}_2$ & $\mathbf{B}_3$ \ \hline
+    phase & 0.025~m & 0.208~m & 0.214~m \ \hline
+    phase+odom & 0.043~m & 0.168~m & 0.083~m \ \hline
+    \end{tabular}
+    \label{tab:base_error}
+\end{table}
+
+The proposed method converges around a travel distance of 20~m, whereas the phase-only condition occasionally exhibits error spikes even when convergence is observed.
+
+\subsection{Discussion}
+The simulation results demonstrate that the proposed method can estimate both the base arrangement and the robot trajectory online even when the base positions are unknown beforehand.
+Because the graph grows as new measurements are appended, data collection must continue until the estimation converges.
+However, an excessively large graph can increase computation time, which is problematic for online estimation that must finish within fixed time intervals.
+Future work includes resampling strategies and other mechanisms to bound the computational cost.
+
+\section{Indoor Experiments with a Real Robot}
+The proposed method targets indoor environments where GNSS is unavailable, so we evaluated it using a real system indoors.
+Experiments were conducted in a laboratory room measuring 7.4~m by 11.2~m, with desks and shelves along the walls.
+
+\subsection{Experimental System}
+The experimental system is implemented on ROS~1 (Noetic), as in the simulation.
+Wi-Wi terminals provide phase information for all terminal pairs through a single unit connected to a PC via USB-Serial.
+One of the bases is connected to the PC to record the phase data.
+Robot control commands and odometry are exchanged over Wi-Fi, and the ground-truth robot pose and base positions are recorded at 120~Hz using a motion-capture system.
+
+The robot and bases used in the experiment are shown in Fig.~\ref{fig:robot}.
+The robot is a custom platform for Wi-Wi carrier-phase measurements built on a mecanum-wheeled base with a transceiver antenna mounted at a height of 1.3~m.
+The robot is manually teleoperated, with velocity commands sent from the experiment PC to the onboard controller over Wi-Fi.
+Odometry is computed from wheel rotations by the onboard controller and transmitted to the PC.
+The bases are mounted on tripods with antennas at a height of 1.3~m.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.95\linewidth]{figures/robot}
+    \caption{Appearance of the robot and fixed base used in the experiment.}
+    \label{fig:robot}
+\end{figure}
+
+\subsection{Experimental Conditions}
+As in the simulation, we estimate the two-dimensional positions of the robot and four bases.
+The true base positions and the initial values used for optimization are listed in Table~\ref{tab:initial_real}.
+
+The robot is teleoperated to follow an arbitrary path, traveling approximately 120~m over 400~s.
+Although optimization is triggered online whenever new measurements arrive, the computation currently exceeds the 20~Hz measurement rate of Wi-Wi, so the system does not yet satisfy real-time constraints.
+
+\begin{table}
+    \centering
+    \caption{Initial values used to estimate fixed bases in the experiment.}
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+        & $\mathbf{B}_1$ & $\mathbf{B}_2$ & $\mathbf{B}_3$ \
+    \hline
+       True value [m]  &$(2.79,0)$  &$(3.58,3.67)$ &$(-0.09,3.67)$ \
+       Initial value [m] &$(3.79,0)$  &$(3.58,4.67)$ &$(0.91,4.67)$ \
+    \hline
+    \end{tabular}
+    \label{tab:initial_real}
+\end{table}
+
+\subsection{Results}
+Figure~\ref{fig:error_real} shows the localization error of the proposed method computed against the motion-capture ground truth.
+While the odometry error accumulates with travel distance, the proposed method maintains errors below roughly 1~m.
+
+Table~\ref{tab:base_error_real} lists the estimated base positions at the end of the trajectory.
+Base~1 is recovered with 0.11~m error, whereas bases~2 and 3 have errors of approximately 1.7~m and 0.787~m, respectively.
+Figure~\ref{fig:error_base} plots the error evolution for bases~1 and 2, the smallest and largest errors among the bases, showing that the error for base~2 converges around 1.7~m.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.95\linewidth]{figures/robosym_online_rover_position_error.pdf}
+    \caption{Position estimation errors of the robot relative to the trajectory distance.}
+    \label{fig:error_real}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.95\linewidth]{figures/robosym_online_base_position_error.pdf}
+    \caption{Position estimation errors of the bases relative to the trajectory distance.}
+    \label{fig:error_base}
+\end{figure}
+
+\begin{table}
+    \centering
+    \caption{Position estimation accuracy for each fixed base in the real-world experiment.}
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+    & $\mathbf{B}_1$ & $\mathbf{B}_2$ & $\mathbf{B}_3$ \
+    \hline
+    phase+odom & 0.11~m & 1.711~m & 0.787~m \
+    \hline
+    \end{tabular}
+    \label{tab:base_error_real}
+\end{table}
+
+These results show that simply deploying wireless bases indoors, where GNSS is unavailable, allows the proposed method to estimate the robot position with sub-meter accuracy and the base positions with errors as low as 0.11~m.
+
+\subsection{Discussion}
+We analyze the estimator's behavior from the perspective of Wi-Wi carrier-phase measurement accuracy.
+Figure~\ref{fig:vicon_vs_wiwi} compares the phase-difference reference derived from motion capture with the Wi-Wi measurements for the base that yielded the smallest error (base~1).
+All bases exhibited similar trends.
+Table~\ref{tab:vicon_vs_wiwi} summarizes the root-mean-square error (RMSE) between the reference and measured phase differences, showing an average precision of approximately 0.03~m.
+However, Fig.~\ref{fig:vicon_vs_wiwi} reveals spike-like outliers, likely caused by reflected multipath signals.
+Although the optimization can still achieve 0.1~m accuracy in some instances despite these spikes, they also explain the 1.7~m error observed for base~2.
+Future work includes rejecting measurements affected by strong reflections to further improve accuracy.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.99\linewidth]{figures/robosym_distance_pdm_differences.pdf}
+    \caption{Difference between the reference phase differences calculated from motion capture and the phase differences measured by Wi-Wi (base~1).}
+    \label{fig:vicon_vs_wiwi}
+\end{figure}
+
+\begin{table}[tb]
+    \centering
+    \caption{RMSE between the reference and measured values of phase differences.}
+    \begin{tabular}{|c|c|c|c|c|}
+    \hline
+         & $\mathrm{Base}_0$ & $\mathrm{Base}_1$ & $\mathrm{Base}_2$ & $\mathrm{Base}_3$ \
+    \hline
+     RMSE [m] & 0.035 & 0.027 & 0.029 & 0.025 \
+     \hline
+    \end{tabular}
+    \label{tab:vicon_vs_wiwi}
+\end{table}
+
+\section{Conclusion}
+We proposed a graph-optimization method that combines carrier-phase differences and odometry to simultaneously estimate the trajectory of a mobile robot and the positions of wireless fixed bases.
+Simulation experiments confirmed that incorporating phase differences between consecutive odometry poses suppresses the accumulation of odometry errors and improves estimation accuracy.
+Real-world experiments demonstrated that the method achieves sub-meter accuracy for robot localization and 0.11~m accuracy for base localization in indoor environments where GNSS cannot be used.
+Future work includes mitigating multipath-induced outliers and reducing computation time toward real-time operation.
 
 \section*{Acknowledgment}
+This work was supported by the Fukushima Institute for Research, Education and Innovation (F-REI) under grant JPFR23010101.
 
-The preferred spelling of the word ``acknowledgment'' in America is without 
-an ``e'' after the ``g''. Avoid the stilted expression ``one of us (R. B. 
-G.) thanks $\ldots$''. Instead, try ``R. B. G. thanks$\ldots$''. Put sponsor 
-acknowledgments in the unnumbered footnote on the first page.
-
-\section*{References}
-
-Please number citations consecutively within brackets \cite{b1}. The 
-sentence punctuation follows the bracket \cite{b2}. Refer simply to the reference 
-number, as in \cite{b3}---do not use ``Ref. \cite{b3}'' or ``reference \cite{b3}'' except at 
-the beginning of a sentence: ``Reference \cite{b3} was the first $\ldots$''
-
-Number footnotes separately in superscripts. Place the actual footnote at 
-the bottom of the column in which it was cited. Do not put footnotes in the 
-abstract or reference list. Use letters for table footnotes.
-
-Unless there are six authors or more give all authors' names; do not use 
-``et al.''. Papers that have not been published, even if they have been 
-submitted for publication, should be cited as ``unpublished'' \cite{b4}. Papers 
-that have been accepted for publication should be cited as ``in press'' \cite{b5}. 
-Capitalize only the first word in a paper title, except for proper nouns and 
-element symbols.
-
-For papers published in translation journals, please give the English 
-citation first, followed by the original foreign-language citation \cite{b6}.
-
-\begin{thebibliography}{00}
-\bibitem{b1} G. Eason, B. Noble, and I. N. Sneddon, ``On certain integrals of Lipschitz-Hankel type involving products of Bessel functions,'' Phil. Trans. Roy. Soc. London, vol. A247, pp. 529--551, April 1955.
-\bibitem{b2} J. Clerk Maxwell, A Treatise on Electricity and Magnetism, 3rd ed., vol. 2. Oxford: Clarendon, 1892, pp.68--73.
-\bibitem{b3} I. S. Jacobs and C. P. Bean, ``Fine particles, thin films and exchange anisotropy,'' in Magnetism, vol. III, G. T. Rado and H. Suhl, Eds. New York: Academic, 1963, pp. 271--350.
-\bibitem{b4} K. Elissa, ``Title of paper if known,'' unpublished.
-\bibitem{b5} R. Nicole, ``Title of paper with only first word capitalized,'' J. Name Stand. Abbrev., in press.
-\bibitem{b6} Y. Yorozu, M. Hirano, K. Oka, and Y. Tagawa, ``Electron spectroscopy studies on magneto-optical media and plastic substrate interface,'' IEEE Transl. J. Magn. Japan, vol. 2, pp. 740--741, August 1987 [Digests 9th Annual Conf. Magnetics Japan, p. 301, 1982].
-\bibitem{b7} M. Young, The Technical Writer's Handbook. Mill Valley, CA: University Science, 1989.
-\end{thebibliography}
-\vspace{12pt}
-\color{red}
-IEEE conference templates contain guidance text for composing and formatting conference papers. Please ensure that all template text is removed from your conference paper prior to submission to the conference. Failure to remove the template text from your paper may result in your paper not being published.
+\bibliographystyle{IEEEtran}
+\bibliography{references}
 
 \end{document}
