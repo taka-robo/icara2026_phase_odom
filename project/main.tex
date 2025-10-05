@@ -13,10 +13,64 @@
 
 \title{Phase Odometry: Trajectory Estimation for Mobile Robots via Graph Optimization to Mitigate Error Accumulation by Complementing Wi-Wi Carrier Wave Phases and Odometry}
 
-\author{\IEEEauthorblockN{Takaaki Nara\IEEEauthorrefmark{1}, Yoshito Okada\IEEEauthorrefmark{1}, Shotaro Kojima\IEEEauthorrefmark{1}, Yoshiki Yokota\IEEEauthorrefmark{1},\ Ranulfo Bezerra\IEEEauthorrefmark{1}, Kazunori Ohno\IEEEauthorrefmark{1}, Nobuyasu Shiga\IEEEauthorrefmark{2}, Satoshi Yasuda\IEEEauthorrefmark{2},\ Kenichi Takizawa\IEEEauthorrefmark{2}, and Satoshi Tadokoro\IEEEauthorrefmark{1}}
-\IEEEauthorblockA{\IEEEauthorrefmark{1}Graduate School of Information Sciences, Tohoku University, Sendai, Miyagi 980-8579, Japan\
-Email: nara.takaaki@rm.is.tohoku.ac.jp}
-\IEEEauthorblockA{\IEEEauthorrefmark{2}National Institute of Information and Communications Technology, Koganei, Tokyo 184-8795, Japan}}
+\author{
+\IEEEauthorblockN{Takaaki Nara}
+\IEEEauthorblockA{\textit{Graduate School of Information Sciences} \\
+\textit{Tohoku University}\\
+Sendai, Miyagi 980-8579, Japan \\
+nara.takaaki@rm.is.tohoku.ac.jp}
+\and
+\IEEEauthorblockN{Yoshito Okada}
+\IEEEauthorblockA{\textit{Graduate School of Information Sciences} \\
+\textit{Tohoku University}\\
+Sendai, Miyagi 980-8579, Japan \\
+email address or ORCID}
+\and
+\IEEEauthorblockN{Shotaro Kojima}
+\IEEEauthorblockA{\textit{Graduate School of Information Sciences} \\
+\textit{Tohoku University}\\
+Sendai, Miyagi 980-8579, Japan \\
+email address or ORCID}
+\and
+\IEEEauthorblockN{Yoshiki Yokota}
+\IEEEauthorblockA{\textit{Graduate School of Information Sciences} \\
+\textit{Tohoku University}\\
+Sendai, Miyagi 980-8579, Japan \\
+email address or ORCID}
+\and
+\IEEEauthorblockN{Ranulfo Bezerra}
+\IEEEauthorblockA{\textit{Graduate School of Information Sciences} \\
+\textit{Tohoku University}\\
+Sendai, Miyagi 980-8579, Japan \\
+email address or ORCID}
+\and
+\IEEEauthorblockN{Kazunori Ohno}
+\IEEEauthorblockA{\textit{Graduate School of Information Sciences} \\
+\textit{Tohoku University}\\
+Sendai, Miyagi 980-8579, Japan \\
+email address or ORCID}
+\and
+\IEEEauthorblockN{Nobuyasu Shiga}
+\IEEEauthorblockA{\textit{National Institute of Information and Communications Technology} \\
+Koganei, Tokyo 184-8795, Japan \\
+email address or ORCID}
+\and
+\IEEEauthorblockN{Satoshi Yasuda}
+\IEEEauthorblockA{\textit{National Institute of Information and Communications Technology} \\
+Koganei, Tokyo 184-8795, Japan \\
+email address or ORCID}
+\and
+\IEEEauthorblockN{Kenichi Takizawa}
+\IEEEauthorblockA{\textit{National Institute of Information and Communications Technology} \\
+Koganei, Tokyo 184-8795, Japan \\
+email address or ORCID}
+\and
+\IEEEauthorblockN{Satoshi Tadokoro}
+\IEEEauthorblockA{\textit{Graduate School of Information Sciences} \\
+\textit{Tohoku University}\\
+Sendai, Miyagi 980-8579, Japan \\
+email address or ORCID}
+}
 
 \maketitle
 
@@ -110,7 +164,7 @@ The state variables of each node are given by
    \mathbf{\hat{x}}_i = \left[\mathbf{p}_i\, \theta_{i}\right], \quad
    \mathbf{\hat{B}}_j = \left[\mathbf{p}'_j\right],
 \end{equation}
-where $\mathbf{p}$ denotes the position $(x,y)$ of each node in the 2-D estimation frame and $\theta_i$ is the yaw angle in the $xy$-plane.
+where $\mathbf{p}$ denotes the position $(x,y)$ of each node in the 2-D estimation frame and $\theta_i" is the yaw angle in the $xy$-plane.
 The bases are assumed to have isotropic antennas, so orientation information is not included.
 
 Graph-based pose estimation suffers from a gauge freedom: applying a common translation and rotation to all nodes leaves the cost unchanged, preventing a unique solution.
@@ -149,7 +203,7 @@ The carrier-phase measurement obtained from Wi-Wi is modeled as~\cite{Peng2017}
 \begin{equation}
      \phi_{i,j} = \phi_{D,i,j} + \frac{1}{2}\pi K_i + w^{\phi}_{i,j},
 \end{equation}
-where $\phi_{D,i,j}$ represents the phase change accumulated during propagation between antennas, $K_i$ is the integer bias used to unwrap the phase every half wavelength from the start of measurement, and $w^{\phi}_{i,j}$ denotes measurement noise.
+where $\phi_{D,i,j}$ represents the phase change accumulated during propagation between antennas, $K_i$ is the the integer bias used to unwrap the phase every half wavelength from the start of measurement, and $w^{\phi}_{i,j}$ denotes measurement noise.
 Although Wi-Wi resolves the ambiguity by continuously unwrapping the phase from the beginning of the experiment, reflected multipath signals can cause incorrect integer-bias updates, leading to accumulated errors.
 Therefore, instead of linking a robot node to a base node using a single phase observation, we define error functions using the difference between phase measurements at poses $i$ and $i+n$.
 If the phase measurements are error free, the difference corresponds to the difference in distances between the robot poses and the base.
