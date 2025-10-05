@@ -15,61 +15,66 @@
 
 \author{
 \IEEEauthorblockN{Takaaki Nara}
-\IEEEauthorblockA{\textit{Graduate School of Information Sciences} \\
+\IEEEauthorblockA{\textit{Graduate School of Information Sciences (GSIS)} \\
 \textit{Tohoku University}\\
 Sendai, Miyagi 980-8579, Japan \\
 nara.takaaki@rm.is.tohoku.ac.jp}
+~\\
 \and
 \IEEEauthorblockN{Yoshito Okada}
-\IEEEauthorblockA{\textit{Graduate School of Information Sciences} \\
+\IEEEauthorblockA{\textit{Tough Cyberphysical AI Research Center(TCPAI)} \\
 \textit{Tohoku University}\\
 Sendai, Miyagi 980-8579, Japan \\
-email address or ORCID}
+ORCID}
+~\\
 \and
 \IEEEauthorblockN{Shotaro Kojima}
-\IEEEauthorblockA{\textit{Graduate School of Information Sciences} \\
+\IEEEauthorblockA{\textit{TCPAI} \\
 \textit{Tohoku University}\\
 Sendai, Miyagi 980-8579, Japan \\
-email address or ORCID}
+ORCID}
+~\\
 \and
 \IEEEauthorblockN{Yoshiki Yokota}
-\IEEEauthorblockA{\textit{Graduate School of Information Sciences} \\
+\IEEEauthorblockA{\textit{GSIS} \\
 \textit{Tohoku University}\\
 Sendai, Miyagi 980-8579, Japan \\
-email address or ORCID}
+ORCID}
+~\\
 \and
 \IEEEauthorblockN{Ranulfo Bezerra}
-\IEEEauthorblockA{\textit{Graduate School of Information Sciences} \\
+\IEEEauthorblockA{\textit{TCPAI} \\
 \textit{Tohoku University}\\
 Sendai, Miyagi 980-8579, Japan \\
-email address or ORCID}
+ORCID}
 \and
 \IEEEauthorblockN{Kazunori Ohno}
-\IEEEauthorblockA{\textit{Graduate School of Information Sciences} \\
+\IEEEauthorblockA{\textit{GSIS} \\
 \textit{Tohoku University}\\
 Sendai, Miyagi 980-8579, Japan \\
-email address or ORCID}
+ORCID}
 \and
 \IEEEauthorblockN{Nobuyasu Shiga}
-\IEEEauthorblockA{\textit{National Institute of Information and Communications Technology} \\
+\IEEEauthorblockA{\textit{National Institute of Information and Communications Technology (NICT)} \\
 Koganei, Tokyo 184-8795, Japan \\
-email address or ORCID}
+ORCID}
 \and
 \IEEEauthorblockN{Satoshi Yasuda}
-\IEEEauthorblockA{\textit{National Institute of Information and Communications Technology} \\
+\IEEEauthorblockA{\textit{NICT} \\
 Koganei, Tokyo 184-8795, Japan \\
-email address or ORCID}
+ORCID}
 \and
 \IEEEauthorblockN{Kenichi Takizawa}
-\IEEEauthorblockA{\textit{National Institute of Information and Communications Technology} \\
+\IEEEauthorblockA{\textit{NICT} \\
 Koganei, Tokyo 184-8795, Japan \\
-email address or ORCID}
+ORCID}
+~\\
 \and
 \IEEEauthorblockN{Satoshi Tadokoro}
-\IEEEauthorblockA{\textit{Graduate School of Information Sciences} \\
+\IEEEauthorblockA{\textit{TCPAI} \\
 \textit{Tohoku University}\\
 Sendai, Miyagi 980-8579, Japan \\
-email address or ORCID}
+ORCID}
 }
 
 \maketitle
@@ -164,7 +169,7 @@ The state variables of each node are given by
    \mathbf{\hat{x}}_i = \left[\mathbf{p}_i\, \theta_{i}\right], \quad
    \mathbf{\hat{B}}_j = \left[\mathbf{p}'_j\right],
 \end{equation}
-where $\mathbf{p}$ denotes the position $(x,y)$ of each node in the 2-D estimation frame and $\theta_i" is the yaw angle in the $xy$-plane.
+where $\mathbf{p}$ denotes the position $(x,y)$ of each node in the 2-D estimation frame and $\theta_i$ is the yaw angle in the $xy$-plane.
 The bases are assumed to have isotropic antennas, so orientation information is not included.
 
 Graph-based pose estimation suffers from a gauge freedom: applying a common translation and rotation to all nodes leaves the cost unchanged, preventing a unique solution.
@@ -174,8 +179,8 @@ Accordingly, $\mathbf{B}_0$ is set to $(0,0)$ and $\mathbf{B}_1$ lies on the $x$
 \subsection{Objective Function}
 The objective function minimized by the optimization is composed of error terms derived from odometry measurements, $\mathbf{e}_{\mathrm{OD}}$, and carrier-phase measurements, $e_{\mathrm{PH}}$, weighted by information matrices $\Omega$ that encode the confidence of each measurement:
 \begin{align}
-    \hat{\mathbf{X}} = \arg\min_{\mathbf{X}} &\sum_{i}\|\mathbf{e}_{\mathrm{OD},i+n,i}\|_{\Omega_{\mathrm{OD},i+n,i}} \
-    &+ \sum_{i}\sum_{j}\|e_{\mathrm{PH},i+n,i,j}\|_{\Omega_{\mathrm{PH},i+n,i,j}}.
+    \hat{\mathbf{X}} = \arg\min_{\mathbf{X}} &\sum_{i}\|\mathbf{e}_{\mathrm{OD},i+n,i}\|_{\Omega_{\mathrm{OD},i+n,i}} \\
+    +& \sum_{i}\sum_{j}\|e_{\mathrm{PH},i+n,i,j}\|_{\Omega_{\mathrm{PH},i+n,i,j}}.
 \end{align}
 
 \subsection{Odometry Error Term}
@@ -222,7 +227,7 @@ Three conditions were compared: using odometry only, using phase information onl
 The simulation was implemented on ROS~1 (Noetic), and the proposed method was realized as a ROS node using the Ceres Solver~\cite{ceres-solver} for nonlinear optimization.
 The specifications of the PC and solver parameters are summarized in Table~\ref{tab:simpc}.
 
-\input{tables/simpc}
+% \input{tables/simpc}
 
 \subsection{Experimental Setup}
 The simulation models a 10~m\,$\times$\,10~m indoor area where both the robot and four fixed bases lie on a two-dimensional plane.
@@ -245,9 +250,9 @@ The phase-only condition initializes the robot nodes with the previous optimizat
     \caption{Initial values used for the estimation of fixed bases.}
     \begin{tabular}{|c|c|c|c|}
     \hline
-        & $\mathbf{B}_1$ & $\mathbf{B}_2$ & $\mathbf{B}_3$ \ \hline
-       True value [m] &(10,0)  &(10,10) &(0,10) \ \hline
-       Initial value [m] &(9,0)  &(11,11) &(0,11) \ \hline
+        & $\mathbf{B}_1$ & $\mathbf{B}_2$ & $\mathbf{B}_3$ \\ \hline
+       True value [m] &(10,0)  &(10,10) &(0,10) \\ \hline
+       Initial value [m] &(9,0)  &(11,11) &(0,11) \\ \hline
     \end{tabular}
     \label{tab:initial}
 \end{table}
@@ -265,9 +270,12 @@ Table~\ref{tab:base_error} summarizes the final estimation errors for all bases 
     \caption{Position estimation accuracy for each fixed base in the simulation.}
     \begin{tabular}{|c|c|c|c|}
     \hline
-    & $\mathbf{B}_1$ & $\mathbf{B}_2$ & $\mathbf{B}_3$ \ \hline
-    phase & 0.025~m & 0.208~m & 0.214~m \ \hline
-    phase+odom & 0.043~m & 0.168~m & 0.083~m \ \hline
+    & $\mathbf{B}_1$ & $\mathbf{B}_2$ & $\mathbf{B}_3$ \\
+    \hline
+    phase & 0.025~m & 0.208~m & 0.214~m \\
+    \hline
+    phase+odom & 0.043~m & 0.168~m & 0.083~m \\
+    \hline
     \end{tabular}
     \label{tab:base_error}
 \end{table}
@@ -315,10 +323,10 @@ Although optimization is triggered online whenever new measurements arrive, the 
     \caption{Initial values used to estimate fixed bases in the experiment.}
     \begin{tabular}{|c|c|c|c|}
     \hline
-        & $\mathbf{B}_1$ & $\mathbf{B}_2$ & $\mathbf{B}_3$ \
+        & $\mathbf{B}_1$ & $\mathbf{B}_2$ & $\mathbf{B}_3$ \\
     \hline
-       True value [m]  &$(2.79,0)$  &$(3.58,3.67)$ &$(-0.09,3.67)$ \
-       Initial value [m] &$(3.79,0)$  &$(3.58,4.67)$ &$(0.91,4.67)$ \
+       True value [m]  &$(2.79,0)$  &$(3.58,3.67)$ &$(-0.09,3.67)$ \\
+       Initial value [m] &$(3.79,0)$  &$(3.58,4.67)$ &$(0.91,4.67)$ \\
     \hline
     \end{tabular}
     \label{tab:initial_real}
@@ -351,9 +359,9 @@ Figure~\ref{fig:error_base} plots the error evolution for bases~1 and 2, the sma
     \caption{Position estimation accuracy for each fixed base in the real-world experiment.}
     \begin{tabular}{|c|c|c|c|}
     \hline
-    & $\mathbf{B}_1$ & $\mathbf{B}_2$ & $\mathbf{B}_3$ \
+    & $\mathbf{B}_1$ & $\mathbf{B}_2$ & $\mathbf{B}_3$ \\
     \hline
-    phase+odom & 0.11~m & 1.711~m & 0.787~m \
+    phase+odom & 0.11~m & 1.711~m & 0.787~m \\
     \hline
     \end{tabular}
     \label{tab:base_error_real}
@@ -382,9 +390,9 @@ Future work includes rejecting measurements affected by strong reflections to fu
     \caption{RMSE between the reference and measured values of phase differences.}
     \begin{tabular}{|c|c|c|c|c|}
     \hline
-         & $\mathrm{Base}_0$ & $\mathrm{Base}_1$ & $\mathrm{Base}_2$ & $\mathrm{Base}_3$ \
+         & $\mathrm{Base}_0$ & $\mathrm{Base}_1$ & $\mathrm{Base}_2$ & $\mathrm{Base}_3$ \\
     \hline
-     RMSE [m] & 0.035 & 0.027 & 0.029 & 0.025 \
+     RMSE [m] & 0.035 & 0.027 & 0.029 & 0.025 \\
      \hline
     \end{tabular}
     \label{tab:vicon_vs_wiwi}
