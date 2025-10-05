@@ -11,9 +11,7 @@
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
 
-\title{Conference Paper Title*\\
-{\footnotesize \textsuperscript{*}Note: Sub-titles are not captured in Xplore and
-should not be used}
+\title{Phase Odometry: Trajectory Estimation for Mobile Robots via Graph Optimization to Mitigate Error Accumulation by Complementing Wi-Wi Carrier Wave Phases and Odometry
 \thanks{Identify applicable funding agency here. If none, delete this.}
 }
 
@@ -63,13 +61,15 @@ email address or ORCID}
 \maketitle
 
 \begin{abstract}
-This document is a model and instructions for \LaTeX.
-This and the IEEEtran.cls file define the components of your paper [title, text, heads, etc.]. *CRITICAL: Do Not Use Symbols, Special Characters, Footnotes, 
-or Math in Paper Title or Abstract.
+We propose a localization method for mobile robots based on the radio wave phase measurements from multiple wireless fixed bases. 
+In the proposed method, we define a graph where the fixed bases and the robot positions at each time step are represented as nodes, and the measured movements between these nodes as edges. 
+Since phase measurements have high accuracy but contain a 2$\pi$ ambiguity, we introduce edges based on the phase differences between measurements and edges based on the robot's wheel odometry, which are less accurate but free from ambiguity. 
+We estimate the positions of both the robot and the fixed bases by solving an unconstrained nonlinear least-squares problem, which minimizes the error between the predicted and measured edge values. 
+In this presentation, we report the results of simulation and real-world experiments on the estimation accuracy of the proposed method.
 \end{abstract}
 
 \begin{IEEEkeywords}
-component, formatting, style, styling, insert
+Localization, Mobile robot, Wireless two-way interferometry(Wi-Wi)
 \end{IEEEkeywords}
 
 \section{Introduction}
@@ -235,7 +235,7 @@ copy& More table copy$^{\mathrm{a}}$& &  \\
 \end{table}
 
 \begin{figure}[htbp]
-\centerline{\includegraphics{fig1.png}}
+\centerline{\includegraphics{figure/fig1.png}}
 \caption{Example of a figure caption.}
 \label{fig}
 \end{figure}
