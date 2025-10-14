@@ -7,11 +7,12 @@
 \usepackage{textcomp}
 \usepackage{xcolor}
 \usepackage{bm}
+\usepackage{here}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
 
-\title{Phase Odometry: Trajectory Estimation for Mobile Robots via Graph Optimization to Mitigate Error Accumulation by Complementing Wi-Wi Carrier Wave Phases and Odometry}
+\title{Phase Odometry: Trajectory Estimation \\ for Mobile Robots via Graph Optimization to Mitigate Error Accumulation by Complementing Wi-Wi Carrier Wave Phases and Odometry}
 
 \author{
 \IEEEauthorblockN{Takaaki Nara}
@@ -79,12 +80,9 @@ ORCID}
 
 \maketitle
 
+
 \begin{abstract}
-We propose a localization method for mobile robots based on the radio wave phase measurements from multiple wireless fixed bases.
-In the proposed method, we define a graph where the fixed bases and the robot positions at each time step are represented as nodes, and the measured movements between these nodes as edges.
-Since phase measurements have high accuracy but contain a $2\pi$ ambiguity, we introduce edges based on the phase differences between measurements and edges based on the robot's wheel odometry, which are less accurate but free from ambiguity.
-We estimate the positions of both the robot and the fixed bases by solving an unconstrained nonlinear least-squares problem, which minimizes the error between the predicted and measured edge values.
-In this presentation, we report the results of simulation and real-world experiments on the estimation accuracy of the proposed method.
+We present a graph-optimization approach that jointly estimates a mobile robot trajectory and the unknown positions of wireless fixed bases by fusing time-differenced carrier phases measured with Wi-Wi and wheel odometry. Robot poses and base locations are modeled as nodes; edges encode odometry increments and carrier-phase differences, avoiding the 2π ambiguity while exploiting the high precision of phase. Minimizing the weighted sum of edge residuals suppresses odometry drift and yields consistent estimates. Indoor experiments over a 120-m trajectory demonstrate sub-meter robot localization and recover base positions with errors as small as 0.11 m, indicating accurate localization in GNSS-denied environments.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -92,17 +90,19 @@ Localization, mobile robot, wireless two-way interferometry (Wi-Wi)
 \end{IEEEkeywords}
 
 \section{Introduction}
-Localization techniques that leverage radio carrier-phase measurements have attracted attention in domains such as autonomous driving because they provide higher measurement accuracy than approaches based on received signal strength or code-based pseudoranges~\cite{gnss_autonomou_vehicles}.
-Real-Time Kinematic Global Navigation Satellite System (RTK-GNSS)~\cite{RTK-GNSS} is a representative carrier-phase-based positioning method.
-RTK-GNSS can estimate the position of a receiving antenna with an accuracy of several centimeters and has been applied in drones~\cite{RTK-M300}, agriculture~\cite{RTK-Agriculture}, construction~\cite{six-dump}, and many other fields.
-However, GNSS requires line of sight to satellites and suffers from accuracy degradation caused by natural phenomena such as ionospheric conditions and geomagnetic disturbances~\cite{gnss_error,STANKOV2007485}.
 
-\begin{figure}[tb]
+
+Localization techniques that leverage radio carrier-phase measurements have attracted attention in domains 
+\begin{figure}[h!]
     \centering
-    \includegraphics[width=0.99\linewidth]{figures/Fig1.pdf}
+    \includegraphics[width=0.9\linewidth]{figures/Fig1.pdf}
     \caption{The simultaneous estimation of the robot's position and the fixed bases' position is based on graph optimization using carrier phase and odometry measurements.}
     \label{fig:fig1}
 \end{figure}
+such as autonomous driving because they provide higher measurement accuracy than approaches based on received signal strength or code-based pseudoranges~\cite{gnss_autonomou_vehicles}.
+Real-Time Kinematic Global Navigation Satellite System (RTK-GNSS)~\cite{RTK-GNSS} is a representative carrier-phase-based positioning method.
+RTK-GNSS can estimate the position of a receiving antenna with an accuracy of several centimeters and has been applied in drones~\cite{RTK-M300}, agriculture~\cite{RTK-Agriculture}, construction~\cite{six-dump}, and many other fields.
+However, GNSS requires line of sight to satellites and suffers from accuracy degradation caused by natural phenomena such as ionospheric conditions and geomagnetic disturbances~\cite{gnss_error}.
 
 As an alternative to RTK-GNSS, we study a localization method based on carrier-phase measurements supported by wireless two-way interferometry (Wi-Wi)~\cite{Shiga2017,Yasuda2019}, a precise wireless time-synchronization technology.
 In carrier-phase measurements, the drift of internal clocks among radio terminals directly affects ranging.
@@ -128,7 +128,6 @@ The results show that the proposed method estimates the robot's position with su
 Wireless two-way interferometry (Wi-Wi) synchronizes clocks between radio terminals by bidirectionally measuring carrier phases and compensating for clock offsets.
 The Wi-Wi terminals used in this study employ the 920~MHz band, achieving 30~ns timing synchronization accuracy and 20~ps phase (jitter) synchronization accuracy~\cite{ouchi2024evaluation}.
 Existing Wi-Wi research includes delay-constrained wireless networking enabled by precise synchronization~\cite{Yamasaki2021} and estimation of atmospheric water vapor based on propagation characteristics~\cite{Yasuda2019}.
-To our knowledge, our prior work~\cite{rsj2021_nara,rsj2022_nara,ziku2023_nara} represents the only studies that apply Wi-Wi to localization of mobile platforms.
 Building on this line of research, we propose a graph-optimization-based localization method that places Wi-Wi terminals on both the mobile robot and the environment and utilizes carrier-phase measurements between the robot and fixed bases.
 
 Graph-based optimization is a powerful approach to minimizing motion and pose errors in robot trajectory estimation, and extensive research has explored simultaneous localization and mapping (SLAM) using cameras, LiDAR, and odometry~\cite{grisetti2010tutorial,graph_slam_urban_mapping,graph_slam_2012}.
@@ -185,10 +184,10 @@ The objective function minimized by the optimization is composed of error terms 
 
 \subsection{Odometry Error Term}
 We adopt the odometry error formulation used in conventional graph SLAM~\cite{graph_slam}.
-The robot state in the odometry frame is defined as
-\begin{equation}
-    \mathbf{x}_i = [\mathbf{p}_i\, \theta_i].
-\end{equation}
+% The robot state in the odometry frame is defined as
+% \begin{equation}
+%     \mathbf{x}_i = [\mathbf{p}_i\, \theta_i].
+% \end{equation}
 The odometry measurement $\mathbf{z}_{i+n,i}$ relating states $\mathbf{x}_i$ and $\mathbf{x}_{i+n}$ is given by
 \begin{equation}
     \mathbf{z}_{i+n,i} = \mathbf{h}(\mathbf{x}_{i+n}, \mathbf{x}_{i}) + \mathbf{w}_{i+n,i},
@@ -198,10 +197,10 @@ The corresponding error function between the estimates $\mathbf{\hat{x}}_i$ and 
 \begin{equation}
     \mathbf{e}_{\mathrm{OD},i+n,i} = \left(\mathbf{\hat{x}}_{i+n} - \mathbf{\hat{x}}_{i}\right) - \mathbf{\hat{H}}\mathbf{z}_{i+n,i},
 \end{equation}
-with the weighted squared error
-\begin{equation}
-    \|\mathbf{e}_{\mathrm{OD},i+n,i}\|_{\Omega_{\mathrm{OD},i+n,i}} = \mathbf{e}_{\mathrm{OD},i+n,i}\, \Omega_{\mathrm{OD},i+n,i}\, \mathbf{e}_{\mathrm{OD},i+n,i}.
-\end{equation}
+% with the weighted squared error
+% \begin{equation}
+%     \|\mathbf{e}_{\mathrm{OD},i+n,i}\|_{\Omega_{\mathrm{OD},i+n,i}} = \mathbf{e}_{\mathrm{OD},i+n,i}\, \Omega_{\mathrm{OD},i+n,i}\, \mathbf{e}_{\mathrm{OD},i+n,i}.
+% \end{equation}
 
 \subsection{Carrier Phase Error Term}
 The carrier-phase measurement obtained from Wi-Wi is modeled as~\cite{Peng2017}
@@ -216,77 +215,77 @@ Letting $\lambda$ denote the wavelength, the error term is defined as
 \begin{equation}
     e_{\mathrm{PH},i+n,i,j} = \left(\|\mathbf{\hat{p}}_{i+n} - \mathbf{\hat{B}}_j\| - \|\mathbf{\hat{p}}_{i} - \mathbf{\hat{B}}_j\|\right) - \lambda (\phi_{i+n,j} - \phi_{i,j}),
 \end{equation}
-with the weighted squared error
-\begin{equation}
-    \|e_{\mathrm{PH},i+n,i,j}\|_{\Omega_{\mathrm{PH},i+n,i,j}} = e_{\mathrm{PH},i+n,i,j} \, \Omega_{\mathrm{PH},i+n,i,j} \, e_{\mathrm{PH},i+n,i,j}.
-\end{equation}
+% with the weighted squared error
+% \begin{equation}
+%     \|e_{\mathrm{PH},i+n,i,j}\|_{\Omega_{\mathrm{PH},i+n,i,j}} = e_{\mathrm{PH},i+n,i,j} \, \Omega_{\mathrm{PH},i+n,i,j} \, e_{\mathrm{PH},i+n,i,j}.
+% \end{equation}
 
-\section{Simulation Experiments}
-We evaluated the effectiveness of combining the odometry and carrier-phase error terms in a simulation environment.
-Three conditions were compared: using odometry only, using phase information only, and the proposed fusion of phase and odometry.
-The simulation was implemented on ROS~1 (Noetic), and the proposed method was realized as a ROS node using the Ceres Solver~\cite{ceres-solver} for nonlinear optimization.
-The specifications of the PC and solver parameters are summarized in Table~\ref{tab:simpc}.
+% \section{Simulation Experiments}
+% We evaluated the effectiveness of combining the odometry and carrier-phase error terms in a simulation environment.
+% Three conditions were compared: using odometry only, using phase information only, and the proposed fusion of phase and odometry.
+% The simulation was implemented on ROS~1 (Noetic), and the proposed method was realized as a ROS node using the Ceres Solver~\cite{ceres-solver} for nonlinear optimization.
+% The specifications of the PC and solver parameters are summarized in Table~\ref{tab:simpc}.
 
-% \input{tables/simpc}
+% % \input{tables/simpc}
 
-\subsection{Experimental Setup}
-The simulation models a 10~m\,$\times$\,10~m indoor area where both the robot and four fixed bases lie on a two-dimensional plane.
-We assume that the Wi-Wi terminals on the bases and the robot share the same height, so altitude is not estimated.
-The bases are placed at the four corners of the area.
-The robot starts at $(x,y)=(1,1)$~m, moves around the perimeter, and then heads toward the center at $(5,5)$~m.
-Carrier-phase and odometry measurements are obtained at 20~Hz.
-Gaussian noise with zero mean and 0.01~m standard deviation is added to the phase measurements.
-For the odometry, translational noise follows a zero-mean Gaussian distribution with 0.1~m standard deviation per meter of travel, and rotational noise has zero mean and 0.1~rad standard deviation.
-Optimization is executed online every time a new measurement arrives.
+% \subsection{Experimental Setup}
+% The simulation models a 10~m\,$\times$\,10~m indoor area where both the robot and four fixed bases lie on a two-dimensional plane.
+% We assume that the Wi-Wi terminals on the bases and the robot share the same height, so altitude is not estimated.
+% The bases are placed at the four corners of the area.
+% The robot starts at $(x,y)=(1,1)$~m, moves around the perimeter, and then heads toward the center at $(5,5)$~m.
+% Carrier-phase and odometry measurements are obtained at 20~Hz.
+% Gaussian noise with zero mean and 0.01~m standard deviation is added to the phase measurements.
+% For the odometry, translational noise follows a zero-mean Gaussian distribution with 0.1~m standard deviation per meter of travel, and rotational noise has zero mean and 0.1~rad standard deviation.
+% Optimization is executed online every time a new measurement arrives.
 
-We compare three conditions: odometry only, phase only, and the proposed fusion.
-The base positions are estimated in the phase-only and proposed conditions.
-The initial values used for the bases are listed in Table~\ref{tab:initial}, offset by approximately one meter from the ground truth.
-The odometry-only condition does not perform optimization; it directly integrates the odometry measurements.
-The phase-only condition initializes the robot nodes with the previous optimization result, whereas the proposed method initializes them with the current odometry measurements.
+% We compare three conditions: odometry only, phase only, and the proposed fusion.
+% The base positions are estimated in the phase-only and proposed conditions.
+% The initial values used for the bases are listed in Table~\ref{tab:initial}, offset by approximately one meter from the ground truth.
+% The odometry-only condition does not perform optimization; it directly integrates the odometry measurements.
+% The phase-only condition initializes the robot nodes with the previous optimization result, whereas the proposed method initializes them with the current odometry measurements.
 
-\begin{table}
-    \centering
-    \caption{Initial values used for the estimation of fixed bases.}
-    \begin{tabular}{|c|c|c|c|}
-    \hline
-        & $\mathbf{B}_1$ & $\mathbf{B}_2$ & $\mathbf{B}_3$ \\ \hline
-       True value [m] &(10,0)  &(10,10) &(0,10) \\ \hline
-       Initial value [m] &(9,0)  &(11,11) &(0,11) \\ \hline
-    \end{tabular}
-    \label{tab:initial}
-\end{table}
+% \begin{table}
+%     \centering
+%     \caption{Initial values used for the estimation of fixed bases.}
+%     \begin{tabular}{|c|c|c|c|}
+%     \hline
+%         & $\mathbf{B}_1$ & $\mathbf{B}_2$ & $\mathbf{B}_3$ \\ \hline
+%        True value [m] &(10,0)  &(10,10) &(0,10) \\ \hline
+%        Initial value [m] &(9,0)  &(11,11) &(0,11) \\ \hline
+%     \end{tabular}
+%     \label{tab:initial}
+% \end{table}
 
-\subsection{Results}
-Figures~\ref{fig:trajectory_sim}(a)--(c) show the estimated robot trajectory and base positions under each condition, and Fig.~\ref{fig:trajectory_sim}(d) plots the Euclidean trajectory error against the travel distance.
-With odometry alone, the estimation error accumulates over time.
-Phase-only estimation largely follows the path but occasionally deviates significantly.
-In the proposed method, the trajectory converges to the true path near the corner at $(9,9)$~m and subsequently maintains approximately 0.1~m error.
+% \subsection{Results}
+% Figures~\ref{fig:trajectory_sim}(a)--(c) show the estimated robot trajectory and base positions under each condition, and Fig.~\ref{fig:trajectory_sim}(d) plots the Euclidean trajectory error against the travel distance.
+% With odometry alone, the estimation error accumulates over time.
+% Phase-only estimation largely follows the path but occasionally deviates significantly.
+% In the proposed method, the trajectory converges to the true path near the corner at $(9,9)$~m and subsequently maintains approximately 0.1~m error.
 
-Figure~\ref{fig:trajectory_sim}(e) reports the estimation error for base $\mathbf{B}_2$, representative of the largest error among the bases.
-Table~\ref{tab:base_error} summarizes the final estimation errors for all bases using the measurements up to the end of the trajectory.
-\begin{table}
-    \centering
-    \caption{Position estimation accuracy for each fixed base in the simulation.}
-    \begin{tabular}{|c|c|c|c|}
-    \hline
-    & $\mathbf{B}_1$ & $\mathbf{B}_2$ & $\mathbf{B}_3$ \\
-    \hline
-    phase & 0.025~m & 0.208~m & 0.214~m \\
-    \hline
-    phase+odom & 0.043~m & 0.168~m & 0.083~m \\
-    \hline
-    \end{tabular}
-    \label{tab:base_error}
-\end{table}
+% Figure~\ref{fig:trajectory_sim}(e) reports the estimation error for base $\mathbf{B}_2$, representative of the largest error among the bases.
+% Table~\ref{tab:base_error} summarizes the final estimation errors for all bases using the measurements up to the end of the trajectory.
+% \begin{table}
+%     \centering
+%     \caption{Position estimation accuracy for each fixed base in the simulation.}
+%     \begin{tabular}{|c|c|c|c|}
+%     \hline
+%     & $\mathbf{B}_1$ & $\mathbf{B}_2$ & $\mathbf{B}_3$ \\
+%     \hline
+%     phase & 0.025~m & 0.208~m & 0.214~m \\
+%     \hline
+%     phase+odom & 0.043~m & 0.168~m & 0.083~m \\
+%     \hline
+%     \end{tabular}
+%     \label{tab:base_error}
+% \end{table}
 
-The proposed method converges around a travel distance of 20~m, whereas the phase-only condition occasionally exhibits error spikes even when convergence is observed.
+% The proposed method converges around a travel distance of 20~m, whereas the phase-only condition occasionally exhibits error spikes even when convergence is observed.
 
-\subsection{Discussion}
-The simulation results demonstrate that the proposed method can estimate both the base arrangement and the robot trajectory online even when the base positions are unknown beforehand.
-Because the graph grows as new measurements are appended, data collection must continue until the estimation converges.
-However, an excessively large graph can increase computation time, which is problematic for online estimation that must finish within fixed time intervals.
-Future work includes resampling strategies and other mechanisms to bound the computational cost.
+% \subsection{Discussion}
+% The simulation results demonstrate that the proposed method can estimate both the base arrangement and the robot trajectory online even when the base positions are unknown beforehand.
+% Because the graph grows as new measurements are appended, data collection must continue until the estimation converges.
+% However, an excessively large graph can increase computation time, which is problematic for online estimation that must finish within fixed time intervals.
+% Future work includes resampling strategies and other mechanisms to bound the computational cost.
 
 \section{Indoor Experiments with a Real Robot}
 The proposed method targets indoor environments where GNSS is unavailable, so we evaluated it using a real system indoors.
@@ -302,7 +301,6 @@ The robot and bases used in the experiment are shown in Fig.~\ref{fig:robot}.
 The robot is a custom platform for Wi-Wi carrier-phase measurements built on a mecanum-wheeled base with a transceiver antenna mounted at a height of 1.3~m.
 The robot is manually teleoperated, with velocity commands sent from the experiment PC to the onboard controller over Wi-Fi.
 Odometry is computed from wheel rotations by the onboard controller and transmitted to the PC.
-The bases are mounted on tripods with antennas at a height of 1.3~m.
 
 \begin{figure}
     \centering
@@ -390,7 +388,7 @@ Future work includes rejecting measurements affected by strong reflections to fu
     \caption{RMSE between the reference and measured values of phase differences.}
     \begin{tabular}{|c|c|c|c|c|}
     \hline
-         & $\mathrm{Base}_0$ & $\mathrm{Base}_1$ & $\mathrm{Base}_2$ & $\mathrm{Base}_3$ \\
+         & $\mathrm{B}_0$ & $\mathrm{B}_1$ & $\mathrm{B}_2$ & $\mathrm{B}_3$ \\
     \hline
      RMSE [m] & 0.035 & 0.027 & 0.029 & 0.025 \\
      \hline
