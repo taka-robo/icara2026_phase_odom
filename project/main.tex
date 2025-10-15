@@ -8,6 +8,7 @@
 \usepackage{xcolor}
 \usepackage{bm}
 \usepackage{here}
+\usepackage{booktabs}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
@@ -19,70 +20,71 @@
 \IEEEauthorblockA{\textit{Graduate School of Information Sciences (GSIS)} \\
 \textit{Tohoku University}\\
 Sendai, Miyagi 980-8579, Japan \\
-nara.takaaki@rm.is.tohoku.ac.jp}
+nara.takaaki@tr.is.tohoku.ac.jp}
 ~\\
 \and
 \IEEEauthorblockN{Yoshito Okada}
 \IEEEauthorblockA{\textit{Tough Cyberphysical AI Research Center(TCPAI)} \\
 \textit{Tohoku University}\\
 Sendai, Miyagi 980-8579, Japan \\
-ORCID}
+okada@tr.is.tohoku.ac.jp}
 ~\\
 \and
 \IEEEauthorblockN{Shotaro Kojima}
 \IEEEauthorblockA{\textit{TCPAI} \\
 \textit{Tohoku University}\\
 Sendai, Miyagi 980-8579, Japan \\
-ORCID}
+kojima@tr.is.tohoku.ac.jp}
 ~\\
 \and
 \IEEEauthorblockN{Yoshiki Yokota}
 \IEEEauthorblockA{\textit{GSIS} \\
 \textit{Tohoku University}\\
 Sendai, Miyagi 980-8579, Japan \\
-ORCID}
+yokota.yoshiki@tr.is.tohoku.ac.jp}
 ~\\
 \and
 \IEEEauthorblockN{Ranulfo Bezerra}
 \IEEEauthorblockA{\textit{TCPAI} \\
 \textit{Tohoku University}\\
 Sendai, Miyagi 980-8579, Japan \\
-ORCID}
+bezerra.ranulfo@tr.is.tohoku.ac.jp}
 \and
 \IEEEauthorblockN{Kazunori Ohno}
-\IEEEauthorblockA{\textit{GSIS} \\
+\IEEEauthorblockA{\textit{TCPAI/GSIS} \\
 \textit{Tohoku University}\\
 Sendai, Miyagi 980-8579, Japan \\
-ORCID}
+kazunori@tr.is.tohoku.ac.jp}
 \and
 \IEEEauthorblockN{Nobuyasu Shiga}
 \IEEEauthorblockA{\textit{National Institute of Information and Communications Technology (NICT)} \\
 Koganei, Tokyo 184-8795, Japan \\
-ORCID}
+shiga@nict.go.jp}
 \and
 \IEEEauthorblockN{Satoshi Yasuda}
 \IEEEauthorblockA{\textit{NICT} \\
 Koganei, Tokyo 184-8795, Japan \\
-ORCID}
+sayasuda@nict.go.jp}
 \and
 \IEEEauthorblockN{Kenichi Takizawa}
 \IEEEauthorblockA{\textit{NICT} \\
 Koganei, Tokyo 184-8795, Japan \\
-ORCID}
+takizawa@nict.go.jp}
 ~\\
 \and
 \IEEEauthorblockN{Satoshi Tadokoro}
 \IEEEauthorblockA{\textit{TCPAI} \\
 \textit{Tohoku University}\\
 Sendai, Miyagi 980-8579, Japan \\
-ORCID}
+tadokoro@tr.is.tohoku.ac.jp}
 }
 
 \maketitle
 
 
 \begin{abstract}
-We present a graph-optimization approach that jointly estimates a mobile robot trajectory and the unknown positions of wireless fixed bases by fusing time-differenced carrier phases measured with Wi-Wi and wheel odometry. Robot poses and base locations are modeled as nodes; edges encode odometry increments and carrier-phase differences, avoiding the 2π ambiguity while exploiting the high precision of phase. Minimizing the weighted sum of edge residuals suppresses odometry drift and yields consistent estimates. Indoor experiments over a 120-m trajectory demonstrate sub-meter robot localization and recover base positions with errors as small as 0.11 m, indicating accurate localization in GNSS-denied environments.
+We present a graph-optimization approach that jointly estimates a mobile robot trajectory and the unknown positions of wireless fixed bases by fusing time-differenced carrier phases measured with Wi-Wi and wheel odometry. Robot poses and base locations are modeled as nodes; edges encode odometry increments and carrier-phase differences, avoiding the 2π ambiguity while exploiting the high precision of phase. Minimizing the weighted sum of edge residuals suppresses odometry drift and yields consistent estimates. 
+Indoor experiments over a 120-m trajectory demonstrate sub-meter robot localization and some base positions where estimated with an error as low as 0.11 m, indicating accurate localization in GNSS-denied environments.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -319,13 +321,13 @@ Although optimization is triggered online whenever new measurements arrive, the 
 \begin{table}
     \centering
     \caption{Initial values used to estimate fixed bases in the experiment.}
-    \begin{tabular}{|c|c|c|c|}
-    \hline
-        & $\mathbf{B}_1$ & $\mathbf{B}_2$ & $\mathbf{B}_3$ \\
-    \hline
-       True value [m]  &$(2.79,0)$  &$(3.58,3.67)$ &$(-0.09,3.67)$ \\
-       Initial value [m] &$(3.79,0)$  &$(3.58,4.67)$ &$(0.91,4.67)$ \\
-    \hline
+    \begin{tabular}{ccccc}
+    \toprule
+        &$\mathbf{B}_0$ & $\mathbf{B}_1$ & $\mathbf{B}_2$ & $\mathbf{B}_3$ \\
+    \midrule
+       True [m]  &$(0,0)$&$(2.79,0)$  &$(3.58,3.67)$ &$(-0.09,3.67)$ \\
+       Initial [m] &$(-,-)$&$(3.79,-)$  &$(3.58,4.67)$ &$(0.91,4.67)$ \\
+    \bottomrule
     \end{tabular}
     \label{tab:initial_real}
 \end{table}
@@ -340,14 +342,14 @@ Figure~\ref{fig:error_base} plots the error evolution for bases~1 and 2, the sma
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.95\linewidth]{figures/robosym_online_rover_position_error.pdf}
+    \includegraphics[width=0.95\linewidth]{project/figures/icara_1018_resutl_2_online_rover_position_error_comparison.pdf}
     \caption{Position estimation errors of the robot relative to the trajectory distance.}
     \label{fig:error_real}
 \end{figure}
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.95\linewidth]{figures/robosym_online_base_position_error.pdf}
+    \includegraphics[width=0.95\linewidth]{project/figures/icara_1018_resutl_2_online_base_position_error_comparison.pdf}
     \caption{Position estimation errors of the bases relative to the trajectory distance.}
     \label{fig:error_base}
 \end{figure}
@@ -355,12 +357,12 @@ Figure~\ref{fig:error_base} plots the error evolution for bases~1 and 2, the sma
 \begin{table}
     \centering
     \caption{Position estimation accuracy for each fixed base in the real-world experiment.}
-    \begin{tabular}{|c|c|c|c|}
-    \hline
-    & $\mathbf{B}_1$ & $\mathbf{B}_2$ & $\mathbf{B}_3$ \\
-    \hline
-    phase+odom & 0.11~m & 1.711~m & 0.787~m \\
-    \hline
+    \begin{tabular}{ccccc}
+    \toprule
+    &$\mathbf{B}_0$& $\mathbf{B}_1$ & $\mathbf{B}_2$ & $\mathbf{B}_3$ \\
+    \midrule
+    phase+odom &-&0.11~m & 1.711~m & 0.787~m \\
+    \bottomrule
     \end{tabular}
     \label{tab:base_error_real}
 \end{table}
@@ -378,7 +380,7 @@ Future work includes rejecting measurements affected by strong reflections to fu
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.99\linewidth]{figures/robosym_distance_pdm_differences.pdf}
+    \includegraphics[width=0.99\linewidth]{project/figures/icara_1018_resutl_2_online_distance_pdm2_differences.pdf}
     \caption{Difference between the reference phase differences calculated from motion capture and the phase differences measured by Wi-Wi (base~1).}
     \label{fig:vicon_vs_wiwi}
 \end{figure}
@@ -386,12 +388,12 @@ Future work includes rejecting measurements affected by strong reflections to fu
 \begin{table}[tb]
     \centering
     \caption{RMSE between the reference and measured values of phase differences.}
-    \begin{tabular}{|c|c|c|c|c|}
-    \hline
+    \begin{tabular}{ccccc}
+    \toprule
          & $\mathrm{B}_0$ & $\mathrm{B}_1$ & $\mathrm{B}_2$ & $\mathrm{B}_3$ \\
-    \hline
+    \midrule
      RMSE [m] & 0.035 & 0.027 & 0.029 & 0.025 \\
-     \hline
+     \bottomrule
     \end{tabular}
     \label{tab:vicon_vs_wiwi}
 \end{table}
